@@ -58,7 +58,6 @@ install.packages("tidyverse")
                                                                                                              
                                                                                                              #same process, using a pipe
                                                                                                              #Cmd Shift M
-                                                                                                           
                                                                                                              #or |>
                                                                                                              #note our select function no longer explicitly calls the tibble
                                                                                                              #as its first element
@@ -66,12 +65,13 @@ install.packages("tidyverse")
                                                                                                                select(record_id, plot_id, species_id)
                                                                                                                  
                                                                                                                  #same as
-                                                                                                                 small_animal_ids <- surveys %>% filter(., weight < 5) %>% select(., record_id, plot_id, species_id)
+                                                                                                                 small_animal_ids <- surveys %>% filter(., weight < 5) %>% select(
+                                                                                                                   ., record_id, plot_id, species_id)
                                                                                                                    
                                                                                                                    
                                                                                                                    
                                                                                                                    #how to do line breaks with pipes
-                                                                                                                   surveys %>% filter(
+                                                                                                                   surveys %>% filter(month == 1)
                                                                                                                      
                                                                                                                      #good:
                                                                                                                      surveys %>% 
@@ -102,6 +102,9 @@ install.packages("tidyverse")
                                                                                                                      table(mini$species_id)
                                                                                                                      #how many rows have a species ID that's either DM or NL?
                                                                                                                      nrow(mini)
+                                                                                                                     
+                                                                                                                    test <- mini %>% filter(species_id %in% c("DM", "NL"))
+                                                                                                                    nrow(test)
 
 
 
@@ -117,14 +120,21 @@ str(surveys)
 
 # Adding a new column
 # mutate: adds a new column
-surveys <- surveys %>%
-  mutate(weight_kg = weight/1000)
+surveys <- surveys %>% 
+  mutate(., weight_kg = weight/1000)
+str(surveys)
 
 # Add other columns
-
+surveys <- surveys %>% 
+  mutate(., weight_kg = weight/1000, weight_kg2 = weight_kg*2)
+str(surveys)
 
 # Filter out the NA's
+ave_weight <- surveys %>%
+  filter(!is.na(weight)) %>%
+  mutate(mean_weight = mean(weight))
 
+nrow(ave_weight) #32283
 
 # Group_by and summarize ----
 # A lot of data manipulation requires us to split the data into groups, apply some analysis to each group, and then combine the results
@@ -135,6 +145,9 @@ surveys %>%
   group_by(sex) %>%
   mutate(mean_weight = mean(weight, na.rm = TRUE)) 
 
+surveys %>%
+  group_by(sex) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE))
 
 # multiple groups
 surveys %>%
@@ -146,10 +159,19 @@ surveys %>%
 
 
 # sort/arrange order a certain way
-
+surveys %>%
+  group_by(sex, species_id) %>%
+  filter(sex !="") %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE)) %>% 
+  arrange(-mean_weight)
 
 # Challenge
 #What was the weight of the heaviest animal measured in each year? Return a table with three columns: year, weight of the heaviest animal in grams, and weight in kilograms, arranged (arrange()) in descending order, from heaviest to lightest. (This table should have 26 rows, one for each year)
-
+surveys %>%
+  group_by(year) %>%
+  filter(weight !="") %>%
+  summarize(weight = max(weight)) %>%
+  mutate(., weight_kg = weight/1000) %>%
+  arrange(-weight,weight_kg,year)
 
 #Try out a new function, count(). Group the data by sex and pipe the grouped data into the count() function. How could you get the same result using group_by() and summarize()? Hint: see ?n.
