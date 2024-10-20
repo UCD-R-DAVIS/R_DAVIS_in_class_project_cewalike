@@ -19,3 +19,50 @@ biggest_critters <- surveys %>%
 biggest_critters
 
 #Where are NA weights?
+surveys %>%
+  filter(is.na(weight)) %>%
+  select(weight, species) %>%
+  group_by(species) %>%
+  tally() %>%
+  arrange(-n)
+#Highly concentrated in the harrisi species
+
+surveys %>%
+  filter(is.na(weight)) %>%
+  select(weight, genus) %>%
+  group_by(genus) %>%
+  tally() %>%
+  arrange(-n)
+
+#Highly concentrated in the Dipodomys genus
+
+surveys %>%
+  filter(is.na(weight)) %>%
+  select(weight, taxa) %>%
+  group_by(taxa) %>%
+  tally() %>%
+  arrange(-n)
+#Highest concentration overall in Rodent taxa
+
+surveys %>%
+  filter(is.na(weight)) %>%
+  select(weight, plot_type) %>%
+  group_by(plot_type) %>%
+  tally() %>%
+  arrange(-n)
+#Highly concentrated in the control plot_type
+
+#Remove the rows where weight is NA and add a column average weight of each species+sex combination to the full surveys dataframe. 
+#Get rid of all the columns except for species, sex, weight, and your new average weight column. 
+surveys_avg_weight <- surveys %>%
+  filter(!is.na(weight)) %>%
+  group_by(species, sex) %>%
+  mutate(., mean_weight = mean(weight)) %>%
+  select(species, sex, weight, mean_weight)
+
+surveys_avg_weight
+
+#Add a new column called above_average that contains logical values stating whether or not a row’s weight is above average for its species+sex combination
+surveys_avg_weight %>%
+  mutate(., above_average = weight > mean_weight) %>%
+  arrange(above_average)
