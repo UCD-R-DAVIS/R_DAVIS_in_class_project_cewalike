@@ -61,8 +61,16 @@ surveys_avg_weight <- surveys %>%
   select(species, sex, weight, mean_weight)
 
 surveys_avg_weight
+#How would we make a summary table
+surveys_mini <- surveys %>%
+  filter(!is.na(weight)) %>%
+  group_by(species, sex) %>%
+  summarize(mean_weight = mean(weight), max_weight = max(weight))
 
-#Add a new column called above_average that contains logical values stating whether or not a row’s weight is above average for its species+sex combination
+surveys_mini
+
+#Add a new column called above_average that contains logical values stating 
+#whether or not a row’s weight is above average for its species+sex combination
 surveys_avg_weight %>%
   mutate(., above_average = weight > mean_weight) %>%
   arrange(above_average)
