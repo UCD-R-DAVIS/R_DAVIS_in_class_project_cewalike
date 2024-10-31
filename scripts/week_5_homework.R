@@ -25,10 +25,12 @@ surveys %>%
   #“small” is less than or equal to the 1st quartile of weight distribution, 
   #“medium” is between (but not inclusive) the 1st and 3rd quartile, 
   #“large” is any weight greater than or equal to the 3rd quartile.
+  filter(weight !="") %>%
   mutate(weight_cat = case_when(
    weight >= sw[4] ~ "large",
    weight > sw[2] ~ "medium",
-   weight <= sw[1] ~ "small"))
- 
+   weight <= sw[2] ~ "small")) %>%
+  select(weight, weight_cat)
+  
 #(Hint: the summary() function on a column summarizes the distribution). 
 #Compare what happens to the weight values of NA, depending on how you specify your arguments.
