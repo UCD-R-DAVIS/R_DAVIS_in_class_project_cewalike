@@ -11,9 +11,9 @@ gapminder %>%
   summarize(mean_lifeExp = mean(lifeExp)) %>%
   #Then create a plot that shows how life expectancy 
   #has changed over time in each continent.
-  ggplot() +
-  geom_point(aes(x = year, y = mean_lifeExp, color = continent)) +
-  geom_smooth(aes(x = year, y = mean_lifeExp, color = continent))
+  ggplot(aes(x = year, y = mean_lifeExp)) +
+  geom_point(aes(color = continent)) +
+  geom_smooth(aes(color = continent))
 
 ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
   geom_point(aes(color = continent), size = .25) + 
