@@ -11,7 +11,7 @@ gapminder %>%
   summarize(mean_lifeExp = mean(lifeExp)) %>%
   #Then create a plot that shows how life expectancy 
   #has changed over time in each continent.
-  ggplot(aes(x = year, y = mean_lifeExp)) +
+  ggplot(data = ., aes(x = year, y = mean_lifeExp)) +
   geom_point(aes(color = continent)) +
   geom_smooth(aes(color = continent))
 
@@ -28,7 +28,7 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
 
 #Create a boxplot that shows the life expectancy 
 #for Brazil, China, El Salvador, Niger, and the United States, 
-ggplot(gapminder[gapminder$country%in%c('Brazil', 'China', 'El Salvador', 'Niger', 'United States'),], 
+ggplot(gapminder[gapminder$country %in% c('Brazil', 'China', 'El Salvador', 'Niger', 'United States'),], 
        aes(x = country, y = lifeExp)) +
   #with the data points in the background using geom_jitter.
   geom_jitter(alpha = 0.1) +
