@@ -10,8 +10,8 @@ mloa <- read_csv("https://raw.githubusercontent.com/gge-ucd/R-DAVIS/master/data/
 
 # Remove observations with missing values in rel_humid (-99), 
 # temp_C_2m (-999.9), and windSpeed_m_s (-999.9)
-mloa %>%
-  filter(rel_humid != -99, temp_C_2m != -999.9, windSpeed_m_s != -999.9)
+mloa <- mloa %>%
+  filter(rel_humid > 0, temp_C_2m > 0, windSpeed_m_s > 0)
 
 # Generate a column called “datetime” using the year, month, day, hour24, 
 # and min columns
@@ -46,9 +46,9 @@ mloa %>%
   xlab("Month (Name)") +
   ylab("Mean temperature (degrees C)") +
   theme_classic() +
-  theme(axis.title = element_text(size = 12,
-                                  color = "black",
-                                  face = "bold"))
+  theme(axis.ticks.x = element_blank())
+#circular color package: roma0
+#use distiller instead of brewer for continuous
 
   
   
